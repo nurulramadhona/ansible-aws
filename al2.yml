@@ -1,0 +1,6 @@
+- hosts: new
+  become: yes
+  gather_facts: no
+#  connection: local
+  roles:
+    - al2

@@ -1,0 +1,5 @@
+- import_tasks: iam-user.yml
+#- import_tasks: iam-user-group.yml
+#- import_tasks: iam-role.yml
+#- import_tasks: iam-policy.yml
+#- import_tasks: iam-delete.yml

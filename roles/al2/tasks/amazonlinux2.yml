@@ -1,0 +1,56 @@
+- name: update
+  yum:
+    name: "*"
+    state: latest
+
+- name: install web server
+  yum:
+    name: httpd
+    state: latest
+
+- name: start web server
+  service:
+    name: httpd
+    enabled: yes
+
+- name: modify home page
+  shell: 'echo "Hello World!" >> /var/www/html/index.html'
+
+- name: create user
+  user:
+    name: nurulramadhona
+    shell: /bin/bash
+
+- name: copy pubkey
+  authorized_key:
+    user: nurulramadhona
+    state: present
+    key: "{{ lookup('file', '/home/nurulramadhona/.ssh/id_rsa.pub') }}"
+
+- name: set user as sudoers
+  lineinfile: 
+    path: /etc/sudoers.d/90-cloud-init-users
+    line: 'nurulramadhona ALL=(ALL) NOPASSWD:ALL'
+    insertafter: EOF
+
+- name: set timezone
+  community.general.timezone:
+    name: Asia/Jakarta
+
+- name: preserve hostname
+  lineinfile: 
+    path: /etc/cloud/cloud.cfg
+    line: 'preserve_hostname: true'
+    insertafter: EOF
+
+- name: set hostname
+  command: hostnamectl set-hostname {{ hostname }}.localdomain
+
+- name: replace localhost entry
+  lineinfile: 
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line: '127.0.0.1   {{ hostname }}.localdomain {{ hostname }} localhost4 localhost4.localdomain4'
+    owner: root
+    group: root 
+    mode: "0644"

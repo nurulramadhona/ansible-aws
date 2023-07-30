@@ -1,0 +1,5 @@
+- name: get the Administrator password
+  community.aws.ec2_win_password:
+    instance_id: i-06091e082947bad68
+    region: ap-southeast-3
+    key_file: "~/.ssh/id_rsa"
